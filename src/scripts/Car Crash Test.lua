@@ -1,0 +1,1 @@
+local UI = loadstring(game:HttpGet(""))()

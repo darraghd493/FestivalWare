@@ -1,9 +1,12 @@
 --[[
     FestivalWare.lua
-    [GUI Library]
 
-    A script by doge2018 for harassing games.
+    A script by darraghd493/doge2018 for harassing games.
     This script is free to use and modify, but please give credit to doge2018.
+
+    This script is a UI library for the FestivalWare script.
+
+
 ]]
 
 -- // Randomise the seed
