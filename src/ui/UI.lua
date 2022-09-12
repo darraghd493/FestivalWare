@@ -2147,33 +2147,4 @@ function library:CreateWindow(Text : string)
 end
 
 
-local lib = library:CreateWindow("Factoryware")
-
-for i = 1, 3 do
-    local tab = lib:CreateTab("Tab " .. i)
-    tab:CreateButton("Button", function()
-        print("Button pressed")
-    end)
-    tab:CreateToggle("Toggle", function(state)
-        print("Toggle state: " .. tostring(state))
-    end)
-    tab:CreateSlider("Slider", 0, 100, 1, function(value)
-        print("Slider value: " .. tostring(value))
-    end)
-    tab:CreateDropdown("Dropdown", {"Option 1", "Option 2", "Option 3"}, function(value)
-        print("Dropdown value: " .. tostring(value))
-    end)
-    tab:CreateColourPicker("Colour Picker", Color3.fromRGB(64, 127, 64), function(colour)
-        print("Colour Picker value: " .. tostring(colour))
-    end)
-    tab:CreateTextBox("TextBox", function(value)
-        print("TextBox value: " .. tostring(value))
-    end)
-end
-
-local tab = lib:CreateTab("Settings")
-tab:CreateButton("Close", function()
-    lib:Close()
-end)
-
--- return library
+return library
