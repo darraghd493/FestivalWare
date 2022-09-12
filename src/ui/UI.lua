@@ -59,6 +59,8 @@ end
 
 -- // Converts a mouse location to a position within the frame given
 function InBounds(frame, mouseX, mouseY)
+    if frame == nil then return nil end
+
 	local X, Y = mouseX - frame.AbsolutePosition.X, mouseY - frame.AbsolutePosition.Y
 	local MaxX, MaxY = frame.AbsoluteSize.X, frame.AbsoluteSize.Y
 
@@ -67,55 +69,61 @@ end
 
 -- // Gives wether a mouse is within a frame
 function IsInBounds(frame, mouseX, mouseY)
+    if frame == nil then return nil end
+
     local X, Y = InBounds(frame, mouseX, mouseY)
     return X >= 0 and X <= 1 and Y >= 0 and Y <= 1
 end
 
 -- // Dragging functions
 -- // Allows for dragging of frames
-function draggable(frame)
+function draggable(frame, exclude)
     local tweenInfo = TweenInfo.new(0.37245, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
 
 	local dragging
-	local dragInput
 	local dragStart
 	local startPos
-	
-	local function update(input)
-		local delta = input.Position - dragStart
-		local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-	
-		local positionTween = TweenService:Create(frame, tweenInfo, {
-			Position = position
-		})
-		positionTween:Play()
-	end
-	
-	frame.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			dragging = true
-			dragStart = input.Position
-			startPos = frame.Position
-	
-			input.Changed:Connect(function()
-				if input.UserInputState == Enum.UserInputState.End then
-					dragging = false
-				end
-			end)
-		end
-	end)
-	
-	frame.InputChanged:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-			dragInput = input
-		end
-	end)
-	
-	UserInputService.InputChanged:Connect(function(input)
-		if input == dragInput and dragging then
-			update(input)
-		end
-	end)
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    
+        local positionTween = TweenService:Create(frame, tweenInfo, {
+            Position = position
+        })
+        positionTween:Play()
+    end
+    
+    frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            if IsInBounds(exclude, input.Position.X, input.Position.Y) then
+                dragging = false
+                return
+            end
+            
+            dragging = true
+            dragStart = input.Position
+            startPos = frame.Position
+    
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) and dragging then
+            update(input)
+        end
+    end)
+    
+    UserInputService.InputEnded:Connect(function(input)
+        if dragging then
+            dragging = false
+        end
+    end)
 end
 
 -- // Create UI
@@ -281,7 +289,7 @@ function library:CreateWindow(Text : string)
     
     -- // Functions
     local index = 0
-    function library:Tab(TabText: string)
+    function library:CreateTab(TabText: string)
         local firstTab = false
         
         -- // Check if there is a tab already
@@ -352,7 +360,10 @@ function library:CreateWindow(Text : string)
 
         -- // Functions
         -- // Label
-        function library:Label(Text: string)
+        function library:CreateLabel(Text: string)
+            -- // Create the elements's library
+            local element_library = {}
+
             -- // Create the label
             local Label = Instance.new("Frame")
             Label.Name = "Label"
@@ -376,10 +387,29 @@ function library:CreateWindow(Text : string)
 
             -- // Register the element
             table.insert(library_m.__tabs[TabText].__elements, Label)
+
+            -- // Functions
+            function element_library:SetText(Text: string)
+                TextLabel.Text = Text
+            end
+
+            function element_library:GetText()
+                return TextLabel.Text
+            end
+
+            function element_library:Destroy()
+                Label:Destroy()
+            end
+
+            -- // Return the element's library
+            return element_library
         end
 
         -- // Button
-        function library:Button(Text: string, Callback)
+        function library:CreateButton(Text: string, Callback)
+            -- // Create the elements's library
+            local element_library = {}
+
             -- // Create the button
             local Button = Instance.new("Frame")
             Button.Name = "Button"
@@ -546,10 +576,33 @@ function library:CreateWindow(Text : string)
             
             Button_1.MouseEnter:Connect(OnMouseEnter)
             Button_1.MouseLeave:Connect(OnMouseLeave)
+
+            -- // Functions
+            function element_library:Call()
+                Callback()
+            end
+
+            function element_library:SetText(Text: string)
+                Label.Text = Text
+            end
+
+            function element_library:GetText()
+                return Label.Text
+            end
+
+            function element_library:Destroy()
+                Button:Destroy()
+            end
+
+            -- // Return the element's library
+            return element_library
         end
 
         -- // Toggle
-        function library:Toggle(Text: string, Callback)
+        function library:CreateToggle(Text: string, Callback)
+            -- // Create the element's library
+            local element_library = {}
+
             -- // Create the toggle
             local Toggle = Instance.new("Frame")
             Toggle.Name = "Toggle"
@@ -682,6 +735,7 @@ function library:CreateWindow(Text : string)
                 end
                 
                 UpdateCheckbox()
+                Callback(toggled)
                 
                 local buttonAbsoluteSize = Toggle_1.AbsoluteSize
                 local buttonAbsolutePosition = Toggle_1.AbsolutePosition
@@ -773,10 +827,45 @@ function library:CreateWindow(Text : string)
             Toggle_2.TextButton.MouseLeave:Connect(OnMouseLeave)
             Toggle_1.MouseEnter:Connect(OnMouseEnter)
             Toggle_1.MouseLeave:Connect(OnMouseLeave)
+
+            -- // Functions
+            function element_library:Toggle()
+                toggled = not toggled
+                UpdateCheckbox()
+                Callback(toggled)
+            end
+
+            function element_library:SetState(state)
+                toggled = state
+                UpdateCheckbox()
+                Callback(toggled)
+            end
+
+            function element_library:GetState()
+                return toggled
+            end
+
+            function element_library:SetText(Text: string)
+                Label.Text = Text
+            end
+
+            function element_library:GetText()
+                return Label.Text
+            end
+
+            function element_library:Destroy()
+                Toggle:Destroy()
+            end
+
+            -- // Return the element's library
+            return element_library
         end
 
         -- // Slider
-        function library:Slider(Text: string, From: number, To: number, Decimals: number, Callback)
+        function library:CreateSlider(Text: string, From: number, To: number, Decimals: number, Callback)
+            -- // Create the element's library
+            local element_library = {}
+
             -- // Create the slider
             local Slider = Instance.new("Frame")
             Slider.Name = "Slider"
@@ -892,9 +981,9 @@ function library:CreateWindow(Text : string)
             local active = false
             local hovering = false
             
-            local min = -1
-            local max = 2
-            local percentage = 0
+            local from = From
+            local to = To
+            local percentage = (From + (To - From))/To
             
             local circleColour = Color3.fromRGB(53, 53, 53)
             
@@ -914,7 +1003,7 @@ function library:CreateWindow(Text : string)
                 })
                 sizeTween:Play()
                 
-                Slider_1.Values.Current.Text = min + ((max - min) * percentage)
+                Slider_1.Values.Current.Text = from + ((to - from) * percentage)
             end
             
             local function CreateCircle()
@@ -1025,7 +1114,7 @@ function library:CreateWindow(Text : string)
             end
             
             local function OnMouseLeave()
-                Callback(min + ((max - min) * percentage))
+                Callback(from + ((to - from) * percentage))
 
                 UpdateSlider()
                 hovering = false
@@ -1039,10 +1128,59 @@ function library:CreateWindow(Text : string)
             
             UserInputService.InputChanged:Connect(OnMouseMove)
             UserInputService.InputEnded:Connect(OnMouseLeave)
+
+            -- // Functions
+            function element_library:SetPercentage(Percentage: number)
+                percentage = math.clamp(Percentage, 0, 1)
+                UpdateSlider()
+            end
+
+            function element_library:SetValue(Value: number)
+                percentage = math.clamp((Value - from)/(to - from), 0, 1)
+                UpdateSlider()
+            end
+
+            function element_library:SetFrom(From: number)
+                from = From
+                percentage = math.clamp((from + ((to - from) * percentage) - from)/(to - from), 0, 1)
+                UpdateSlider()
+            end
+
+            function element_library:SetTo(To: number)
+                to = To
+                percentage = math.clamp((from + ((to - from) * percentage) - from)/(to - from), 0, 1)
+                UpdateSlider()
+            end
+
+            function element_library:GetPercentage()
+                return percentage
+            end
+
+            function element_library:GetValue()
+                return from + ((to - from) * percentage)
+            end
+
+            function element_library:GetFrom()
+                return from
+            end
+
+            function element_library:GetTo()
+                return to
+            end
+
+            function element_library:Destroy()
+                Slider:Destroy()
+            end
+
+            -- // Return the element's library
+            return element_library
         end
 
         -- // Dropdown
-        function library:Dropdown(Text: string, Options, Callback)
+        function library:CreateDropdown(Text: string, Options, Callback)
+            -- // Create the element's library
+            local element_library = {}
+
             -- // Create the dropdown
             local Dropdown = Instance.new("Frame")
             Dropdown.Name = "Dropdown"
@@ -1135,7 +1273,10 @@ function library:CreateWindow(Text : string)
             UIPadding.PaddingTop = UDim.new(0, 0)
             UIPadding.PaddingBottom = UDim.new(0, 0)
 
-            for i, option in ipairs(Options) do
+            local CurrentOption = Options[1]
+
+            -- // Create the options
+            local function create_option(option: string)
                 -- // Expand the menu's canvas size
                 Menu.CanvasSize = Menu.CanvasSize + UDim2.new(0, 0, 0, 36)
                 Menu.Size = Menu.Size + UDim2.new(0, 0, 0, 36)
@@ -1207,6 +1348,13 @@ function library:CreateWindow(Text : string)
                 
                 local function OnMouseButton1Down()
                     active = true
+                    CurrentOption = option
+                    Callback(option)
+
+                    for i, v in pairs(Menu:GetChildren()) do
+                        v.Label.TextColor3 = Color3.fromRGB(236, 236, 236)
+                    end
+                    Label.TextColor3 = Color3.fromRGB(16, 214, 16)
                 
                     local buttonAbsoluteSize = Option.AbsoluteSize
                     local buttonAbsolutePosition = Option.AbsolutePosition
@@ -1295,6 +1443,10 @@ function library:CreateWindow(Text : string)
                 
                 Option.MouseEnter:Connect(OnMouseEnter)
                 Option.MouseLeave:Connect(OnMouseLeave)
+            end
+
+            for i, option in ipairs(Options) do
+                create_option(option)
             end
 
             -- // Register the dropdown
@@ -1455,10 +1607,66 @@ function library:CreateWindow(Text : string)
             Dropdown_1.MouseLeave:Connect(OnMouseLeave)
             Extend.MouseEnter:Connect(OnMouseEnter)
             Extend.MouseLeave:Connect(OnMouseLeave)
+
+            -- // Functions
+            function element_library:AddOption(option)
+                create_option(option)
+            end
+
+            function element_library:RemoveOption(option)
+                for i, v in pairs(Menu:GetChildren()) do
+                    if v.Name == option then
+                        v:Destroy()
+                    end
+                end
+            end
+
+            function element_library:ClearOptions()
+                for i, option in ipairs(Menu:GetChildren()) do
+                    if option:IsA("TextButton") then
+                        option:Destroy()
+                    end
+                end
+            end
+
+            function element_library:AddOptions(Options)
+                for i, option in ipairs(Options) do
+                    create_option(option)
+                end
+            end
+
+            function element_library:GetOptions()
+                return Options
+            end
+
+            function element_library:GetOption()
+                return CurrentOption
+            end
+
+            function element_library:SetOption(option)
+                for i, v in pairs(Menu:GetChildren()) do
+                    if v.Name == option then
+                        CurrentOption = option
+                        v.Label.TextColor3 = Color3.fromRGB(16, 214, 16)
+                    else
+                        v.Label.TextColor3 = Color3.fromRGB(236, 236, 236)
+                    end
+                end
+            end
+
+            function element_library:Destroy()
+                Dropdown:Destroy()
+            end
+
+            -- // Return the element's library
+            return element_library
         end
 
         -- // Colour Picker
-        function library:ColourPicker(Text: string, Colour: Color3, Callback)
+        function library:CreateColourPicker(Text: string, Colour: Color3, Callback)
+            -- // Create the element's library
+            local element_library = {}
+
             -- // Create the colour picker
             local ColourPicker = Instance.new("Frame")
             ColourPicker.Name = "ColourPicker"
@@ -1466,22 +1674,23 @@ function library:CreateWindow(Text : string)
             ColourPicker.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             ColourPicker.BackgroundTransparency = 1.000
             ColourPicker.Size = UDim2.new(0, 496, 0, 42)
+            ColourPicker.ZIndex = 2 -- // Make sure it's on top of the other elements
 
-            local TextButton = Instance.new("TextButton")
-            TextButton.Parent = ColourPicker
-            TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            TextButton.BackgroundTransparency = 1.000
-            TextButton.BorderSizePixel = 0
-            TextButton.ClipsDescendants = true
-            TextButton.Size = UDim2.new(1, 0, 1, 0)
-            TextButton.Font = Enum.Font.SourceSans
-            TextButton.Text = ""
-            TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-            TextButton.TextSize = 14.000
+            local ColourPicker_1 = Instance.new("TextButton")
+            ColourPicker_1.Parent = ColourPicker
+            ColourPicker_1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            ColourPicker_1.BackgroundTransparency = 1.000
+            ColourPicker_1.BorderSizePixel = 0
+            ColourPicker_1.ClipsDescendants = true
+            ColourPicker_1.Size = UDim2.new(1, 0, 1, 0)
+            ColourPicker_1.Font = Enum.Font.SourceSans
+            ColourPicker_1.Text = ""
+            ColourPicker_1.TextColor3 = Color3.fromRGB(0, 0, 0)
+            ColourPicker_1.TextSize = 14.000
 
             local Background = Instance.new("Frame")
             Background.Name = "Background"
-            Background.Parent = TextButton
+            Background.Parent = ColourPicker_1
             Background.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
             Background.BackgroundTransparency = 0.800
             Background.BorderSizePixel = 0
@@ -1507,17 +1716,17 @@ function library:CreateWindow(Text : string)
             Display.TextColor3 = Color3.fromRGB(0, 0, 0)
             Display.TextSize = 14.000
 
-            local TextLabel = Instance.new("TextLabel")
-            TextLabel.Parent = TextButton
-            TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            TextLabel.BackgroundTransparency = 1.000
-            TextLabel.BorderSizePixel = 0
-            TextLabel.Size = UDim2.new(1, 0, 1, 0)
-            TextLabel.Font = Enum.Font.GothamMedium
-            TextLabel.Text = "Colour Picker"
-            TextLabel.TextColor3 = Color3.fromRGB(236, 236, 236)
-            TextLabel.TextSize = 18.000
-            TextLabel.TextWrapped = true
+            local Label = Instance.new("TextLabel")
+            Label.Parent = ColourPicker_1
+            Label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Label.BackgroundTransparency = 1.000
+            Label.BorderSizePixel = 0
+            Label.Size = UDim2.new(1, 0, 1, 0)
+            Label.Font = Enum.Font.GothamMedium
+            Label.Text = Text
+            Label.TextColor3 = Color3.fromRGB(236, 236, 236)
+            Label.TextSize = 18.000
+            Label.TextWrapped = true
 
             local Menu = Instance.new("Frame")
             Menu.Name = "Menu"
@@ -1614,7 +1823,11 @@ function library:CreateWindow(Text : string)
             local colour = Colour
             local target
             local target_marker
-            local colour_data = Colour:ToHSV()
+
+            local h, s, v = Colour:ToHSV()
+            local colour_data = {
+                h, s, v 
+            }
 
             local originalColourPickerSize = Menu.Size
             Menu.Size = UDim2.new(1, 0, 0, 0)
@@ -1643,6 +1856,8 @@ function library:CreateWindow(Text : string)
 
             local function UpdateColour()
                 local X, Y = InBounds(target, Mouse.X, Mouse.Y)
+                if InBounds(target, Mouse.X, Mouse.Y) == nil then return end
+
                 X = math.clamp(X, 0, 1)
                 Y = math.clamp(Y, 0, 1)
                 
@@ -1661,6 +1876,7 @@ function library:CreateWindow(Text : string)
                     BackgroundColor3 = colour
                 })
                 colourTween:Play()
+                Callback(colour)
             end
 	
             local function CreateCircle()
@@ -1692,8 +1908,8 @@ function library:CreateWindow(Text : string)
                 
                 UpdateColourPicker()
                 
-                local buttonAbsoluteSize = TextButton.AbsoluteSize
-                local buttonAbsolutePosition = TextButton.AbsolutePosition
+                local buttonAbsoluteSize = ColourPicker_1.AbsoluteSize
+                local buttonAbsolutePosition = ColourPicker_1.AbsolutePosition
             
                 local mouseAbsolutePosition = Vector2.new(Mouse.X, Mouse.Y)
                 local mouseRelativePosition = (mouseAbsolutePosition - buttonAbsolutePosition)
@@ -1820,23 +2036,56 @@ function library:CreateWindow(Text : string)
             
             UpdateColourPicker()
             
-            TextButton.MouseButton1Down:Connect(OnMouseButton1Down)
+            ColourPicker_1.MouseButton1Down:Connect(OnMouseButton1Down)
             Display.MouseButton1Down:Connect(OnMouseButton1Down)
-            TextButton.MouseButton1Up:Connect(OnMouseButton1Up)
+            ColourPicker_1.MouseButton1Up:Connect(OnMouseButton1Up)
             Display.MouseButton1Up:Connect(OnMouseButton1Up)
             
-            TextButton.MouseEnter:Connect(OnMouseEnter)
+            ColourPicker_1.MouseEnter:Connect(OnMouseEnter)
             Display.MouseEnter:Connect(OnMouseEnter)
-            TextButton.MouseLeave:Connect(OnMouseLeave)
+            ColourPicker_1.MouseLeave:Connect(OnMouseLeave)
             Display.MouseLeave:Connect(OnMouseLeave)
             
             UserInputService.InputBegan:Connect(OnMouseBegin)
             UserInputService.InputChanged:Connect(OnMouseMove)
             UserInputService.InputEnded:Connect(OnMouseEnded)
+
+            -- // Functions
+            function element_library:SetText(Text: string)
+                Label.Text = Text
+            end
+
+            function element_library:GetText()
+                return Label.Text
+            end
+
+            function element_library:SetColour(Colour: Color3)
+                colour = Colour
+                
+                local h, s, v = Colour:ToHSV()
+                local colour_data = {
+                    h, s, v 
+                }
+
+                Marker.Position = UDim2.new(colour_data.S, 0, 1 - colour_data.V, 0)
+                Marker_2.Position = UDim2.new(colour_data.H, 0, 0, 0)
+                UpdateColourPicker()
+            end
+
+            function element_library:GetColour()
+                return colour
+            end
+
+            function element_library:Destroy()
+                ColourPicker:Destroy()
+            end
+
+            -- // Return the element's library
+            return element_library
         end
 
         -- // TextBox
-        function library:TextBox(Text: string, Callback)
+        function library:CreateTextBox(Text: string, Callback)
             -- // Create the textbox
             local TextBox = Instance.new("Frame")
             TextBox.Name = "Textbox"
@@ -1891,37 +2140,40 @@ function library:CreateWindow(Text : string)
     end
 
     -- // Make the window draggable
-    draggable(Body)
+    draggable(Body, Menu)
 
     --// Return the library
     return library
 end
 
-local lib = library:Create("Factoryware")
+
+local lib = library:CreateWindow("Factoryware")
 
 for i = 1, 3 do
-    local tab = lib:Tab("Tab " .. i)
-    tab:Button("Button", function()
+    local tab = lib:CreateTab("Tab " .. i)
+    tab:CreateButton("Button", function()
         print("Button pressed")
     end)
-    tab:Toggle("Toggle", function(state)
+    tab:CreateToggle("Toggle", function(state)
         print("Toggle state: " .. tostring(state))
     end)
-    tab:Slider("Slider", 0, 100, 1, function(value)
+    tab:CreateSlider("Slider", 0, 100, 1, function(value)
         print("Slider value: " .. tostring(value))
     end)
-    tab:Dropdown("Dropdown", {"Option 1", "Option 2", "Option 3"}, function(value)
+    tab:CreateDropdown("Dropdown", {"Option 1", "Option 2", "Option 3"}, function(value)
         print("Dropdown value: " .. tostring(value))
     end)
-    tab:ColourPicker("Colour Picker", Color3.fromRGB(64, 127, 64), function(colour)
+    tab:CreateColourPicker("Colour Picker", Color3.fromRGB(64, 127, 64), function(colour)
         print("Colour Picker value: " .. tostring(colour))
     end)
-    tab:TextBox("TextBox", function(value)
+    tab:CreateTextBox("TextBox", function(value)
         print("TextBox value: " .. tostring(value))
     end)
 end
 
-local tab = lib:Tab("Settings")
-tab:Button("Close", function()
+local tab = lib:CreateTab("Settings")
+tab:CreateButton("Close", function()
     lib:Close()
 end)
+
+-- return library
