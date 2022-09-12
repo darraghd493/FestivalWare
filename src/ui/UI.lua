@@ -131,12 +131,6 @@ function library:CreateWindow(Text : string)
     -- // Create the main frame's library
     local library = {}
 
-    -- // Register the main frame's meta table
-    local library_m = {}
-    library_m.__index = library
-    library_m.__main = nil
-    library_m.__tabs = {}
-
     -- // Create the main frame
     local FestivalWare = Instance.new("ScreenGui")
     
@@ -284,8 +278,24 @@ function library:CreateWindow(Text : string)
     local UIScale = Instance.new("UIScale")
     UIScale.Parent = Body
 
-    -- // Register the main frame
-    library_m.__main = Body
+    -- // Create the notifications frame
+    local Notifications = Instance.new("Frame")
+    Notifications.Name = "Notifications"
+    Notifications.Parent = FestivalWare
+    Notifications.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Notifications.BackgroundTransparency = 1.000
+    Notifications.BorderSizePixel = 0
+    Notifications.Size = UDim2.new(1, 0, 0.980000019, 0)
+
+    local UIListLayout_1 = Instance.new("UIListLayout")
+    UIListLayout_1.Parent = Notifications
+    UIListLayout_1.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    UIListLayout_1.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout_1.VerticalAlignment = Enum.VerticalAlignment.Bottom
+    UIListLayout_1.Padding = UDim.new(0, 5)
+
+    local UIScale_1 = Instance.new("UIScale")
+    UIScale_1.Parent = Notifications
     
     -- // Functions
     local index = 0
@@ -293,22 +303,13 @@ function library:CreateWindow(Text : string)
         local firstTab = false
         
         -- // Check if there is a tab already
-        -- if #library_m.__tabs == 0 then
         if index == 0 then
             firstTab = true
         end
         index = index + 1
 
-        -- // Register the tab
-        library_m.__tabs[TabText] = {
-            __name = TabText,
-            __index = {},
-            __elements = {}
-        }
-
         -- // Create the tabs's library
-        local library = library_m.__tabs[TabText]
-        library_m.__index = library
+        local library = {}
 
         -- // Create the tab button    
         local Button = Instance.new("TextButton")
@@ -326,9 +327,6 @@ function library:CreateWindow(Text : string)
         -- // Extend the tab area
         Buttons.CanvasSize = Buttons.CanvasSize + UDim2.new(0, 0, 0, 31)
 
-        -- // Register the tab button
-        library_m.__tabs[TabText].__button = Button
-
         -- // Create the tab panel
         local Frame = Instance.new("ScrollingFrame")
         Frame.Name = "Frame"
@@ -341,14 +339,11 @@ function library:CreateWindow(Text : string)
         Frame.ScrollBarThickness = 0
         Frame.Visible = firstTab
 
-        -- // Register the tab panel
-        library_m.__tabs[TabText].__panel = Frame
-
         -- // Create the tab's UIListLayout
         local UIListLayout = Instance.new("UIListLayout")
         UIListLayout.Parent = Frame
         UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        UIListLayout.Padding = UDim.new(0, 5)
+        UIListLayout.Padding = UDim.new(0, 0)
 
         -- // Create the tab's UIPadding
         local UIPadding = Instance.new("UIPadding")
@@ -384,9 +379,6 @@ function library:CreateWindow(Text : string)
             TextLabel.Text = Text
             TextLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
             TextLabel.TextSize = 32.000
-
-            -- // Register the element
-            table.insert(library_m.__tabs[TabText].__elements, Label)
 
             -- // Functions
             function element_library:SetText(Text: string)
@@ -457,9 +449,6 @@ function library:CreateWindow(Text : string)
             Label.TextColor3 = Color3.fromRGB(236, 236, 236)
             Label.TextSize = 18.000
             Label.TextWrapped = true
-
-            -- // Register the element
-            table.insert(library_m.__tabs[TabText].__elements, Button)
 
             -- // Run the script
             local active = false
@@ -671,9 +660,6 @@ function library:CreateWindow(Text : string)
             Label.TextColor3 = Color3.fromRGB(236, 236, 236)
             Label.TextSize = 18.000
             Label.TextWrapped = true
-
-            -- // Register the element
-            table.insert(library_m.__tabs[TabText].__elements, Toggle)
 
             -- // Run the script
             local active = false
@@ -973,9 +959,6 @@ function library:CreateWindow(Text : string)
             Current.TextSize = 18.000
             Current.TextWrapped = true
             Current.TextXAlignment = Enum.TextXAlignment.Right
-
-            -- // Register the slider
-            table.insert(library_m.__tabs[TabText].__elements, Slider)
 
             -- // Run the script
             local active = false
@@ -1449,9 +1432,6 @@ function library:CreateWindow(Text : string)
                 create_option(option)
             end
 
-            -- // Register the dropdown
-            table.insert(library_m.__tabs[TabText].__elements, Dropdown)
-
             -- // Run the script
             local active = false
             local hovering = false
@@ -1810,9 +1790,6 @@ function library:CreateWindow(Text : string)
             Fade.Image = "http://www.roblox.com/asset/?id=10890905921"
             Fade.ImageTransparency = 0.250
 
-            -- // Register the colour picker
-            table.insert(library_m.__tabs[TabText].__elements, ColourPicker)
-
             -- // Run the script
             local active = false
             local hovering = false
@@ -1864,11 +1841,11 @@ function library:CreateWindow(Text : string)
                 if X and Y then
                     if target == A then
                         SetColour(nil, nil, 1 - Y)
-                        Marker.Position = UDim2.new(0.5, 0, Y, 0)
+                        target_marker.Position = UDim2.new(0.5, 0, Y, 0)
                     elseif target == RGB then
                         print(X, Y)
                         SetColour(1 - X, 1 - Y)
-                        Marker_2.Position = UDim2.new(X, 0, Y, 0)
+                        target_marker.Position = UDim2.new(X, 0, Y, 0)
                     end
                 end
 
@@ -2107,9 +2084,6 @@ function library:CreateWindow(Text : string)
             TextBox_1.TextColor3 = Color3.fromRGB(195, 195, 195)
             TextBox_1.TextSize = 14.000
 
-            -- // Register the element
-            table.insert(library_m.__tabs[TabText].__elements, TextBox)
-
             -- // Register the callback
             TextBox_1.FocusLost:Connect(function(EnterPressed)
                 if EnterPressed then
@@ -2134,9 +2108,94 @@ function library:CreateWindow(Text : string)
         return library
     end
 
+    function library:CreateNotification(Title: string, Description: string, Length: number, Callback)
+        -- // Use a coroutine to create the notification
+        -- // as to not block the thread
+        coroutine.resume(coroutine.create(function()
+            -- // Create the notification
+            local Notification = Instance.new("Frame")
+            Notification.Name = "Notification"
+            Notification.Parent = Notifications
+            Notification.BackgroundColor3 = Color3.fromRGB(21, 21, 21)
+            Notification.BorderSizePixel = 0
+            Notification.ClipsDescendants = true
+            Notification.Position = UDim2.new(0.861995757, 0, 0.912711024, 0)
+            Notification.Size = UDim2.new(0, 285, 0, 100)
+            Notification.Style = Enum.FrameStyle.RobloxRound
+
+            local Title_Label = Instance.new("TextLabel")
+            Title_Label.Name = "Title"
+            Title_Label.Parent = Notification
+            Title_Label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Title_Label.BackgroundTransparency = 1.000
+            Title_Label.Position = UDim2.new(0.028070176, 0, 0.0799999982, 0)
+            Title_Label.Size = UDim2.new(0, 255, 0, 37)
+            Title_Label.Font = Enum.Font.GothamBlack
+            Title_Label.Text = Title
+            Title_Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Title_Label.TextScaled = true
+            Title_Label.TextSize = 14.000
+            Title_Label.TextWrapped = true
+            Title_Label.TextXAlignment = Enum.TextXAlignment.Left
+
+            local Description_Label = Instance.new("TextLabel")
+            Description_Label.Name = "Description"
+            Description_Label.Parent = Notification
+            Description_Label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Description_Label.BackgroundTransparency = 1.000
+            Description_Label.Position = UDim2.new(0.0545645729, 0, 0.5, 0)
+            Description_Label.Size = UDim2.new(0, 254, 0, 37)
+            Description_Label.Font = Enum.Font.GothamMedium
+            Description_Label.Text = Description
+            Description_Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Description_Label.TextSize = 16.000
+            Description_Label.TextWrapped = true
+            Description_Label.TextXAlignment = Enum.TextXAlignment.Left
+
+            -- // Run the script
+            local originalNotificationSize = Notification.Size
+            Notification.Size = UDim2.new(0, 0, 0, 0)
+
+            local notificationInTween = TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Size = originalNotificationSize
+            })
+
+            local notificationOutTween = TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Size = UDim2.new(0, 0, 0, 100)
+            })
+
+            notificationInTween:Play()
+            wait(Length)
+            notificationOutTween:Play()
+            notificationOutTween.Completed:Wait()
+            Notification:Destroy()      
+
+            if Callback ~= nil then
+                Callback()
+            end
+        end))
+    end
+
     function library:Close()
-        library_m.__main.Visible = false
-        library_m.__main:Destroy()
+        local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local bodyScaleTween = TweenService:Create(UIScale, tweenInfo, {
+            Scale = 0
+        })
+        local notificationsScaleTween = TweenService:Create(UIScale_1, tweenInfo, {
+            Scale = 0
+        })
+
+        bodyScaleTween:Play()
+        notificationsScaleTween:Play()
+        bodyScaleTween.Completed:Wait()
+
+        Body.Visible = false
+        Notifications.Visible = false
+        FestivalWare.Enabled = false
+
+        Body:Destroy()
+        Notifications:Destroy()
+        FestivalWare:Destroy()
     end
 
     -- // Make the window draggable
@@ -2146,5 +2205,14 @@ function library:CreateWindow(Text : string)
     return library
 end
 
+local Window = library:CreateWindow("FestivalWare")
+for i=1,10 do
+    Window:CreateNotification("Test", "This is a test notification", 5, function()
+        if i == 10 then
+            Window:Close()
+        end
+    end)
+    wait(0.1)
+end
 
 return library
