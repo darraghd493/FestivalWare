@@ -5,8 +5,7 @@
     This script is free to use and modify, but please give credit to doge2018.
 
     This script is a UI library for the FestivalWare script.
-
-
+    It is not intended to be used on its own.
 ]]
 
 -- // Randomise the seed
@@ -120,7 +119,7 @@ function draggable(frame)
 end
 
 -- // Create UI
-function library:Create(Text : string)
+function library:CreateWindow(Text : string)
     -- // Create the main frame's library
     local library = {}
 
@@ -133,10 +132,18 @@ function library:Create(Text : string)
     -- // Create the main frame
     local FestivalWare = Instance.new("ScreenGui")
     
-    -- // Protect the frame with synapse
-    syn.protect_gui(FestivalWare)
+    -- // Check if Synapse X is being used
+    -- // and if so, protect the frame
+    if syn then
+        syn.protect_gui(FestivalWare)
+        FestivalWare.Name = random(16)
+    end
 
-    FestivalWare.Name = "FestivalWare"
+    -- // Randomise the name of the GUI
+    -- // as a minimal form of protection
+    FestivalWare.Name = random(16)
+
+    -- // Complete the GUI behaviour
     FestivalWare.Parent = CoreGui
     FestivalWare.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
