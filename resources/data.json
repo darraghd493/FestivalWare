@@ -1,0 +1,14 @@
+{
+    "Hub": {
+        "Name": "FestivalWare",
+        "Description": "FestivalWare is a free, open source, web.",
+        "Version": "0.0.0-Alpha",
+        "Games": {
+            "7720943627": {
+                "Title": "Car Crash Test",
+                "Version": "0.0.0",
+                "Path": "Car Crash Test.lua"
+            }
+        }
+    }
+}
