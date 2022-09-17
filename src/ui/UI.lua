@@ -2205,14 +2205,4 @@ function library:CreateWindow(Text : string)
     return library
 end
 
-local Window = library:CreateWindow("FestivalWare")
-for i=1,10 do
-    Window:CreateNotification("Test", "This is a test notification", 5, function()
-        if i == 10 then
-            Window:Close()
-        end
-    end)
-    wait(0.1)
-end
-
 return library
