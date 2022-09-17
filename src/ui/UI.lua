@@ -588,7 +588,7 @@ function library:CreateWindow(Text : string)
         end
 
         -- // Toggle
-        function library:CreateToggle(Text: string, Callback)
+        function library:CreateCheckbox(Text: string, Callback)
             -- // Create the element's library
             local element_library = {}
 
