@@ -41,3 +41,7 @@ luac.out
 
 # Roblox Studio Lock files
 *.rbxl.lock
+
+# Developer directories
+dev/
+.dev/

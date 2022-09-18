@@ -289,7 +289,7 @@ function library:CreateWindow(Text : string)
 
     local UIListLayout_1 = Instance.new("UIListLayout")
     UIListLayout_1.Parent = Notifications
-    UIListLayout_1.HorizontalAlignment = Enum.HorizontalAlignment.Left
+    UIListLayout_1.HorizontalAlignment = Enum.HorizontalAlignment.Right
     UIListLayout_1.SortOrder = Enum.SortOrder.LayoutOrder
     UIListLayout_1.VerticalAlignment = Enum.VerticalAlignment.Bottom
     UIListLayout_1.Padding = UDim.new(0, 5)
@@ -2167,6 +2167,9 @@ function library:CreateWindow(Text : string)
     end
 
     function library:CreateNotification(Title: string, Description: string, Length: number, Callback)
+        -- // Set the default length to 5 seconds if none is provided
+        Length = Length or 5
+
         -- // Use a coroutine to create the notification
         -- // as to not block the thread
         coroutine.resume(coroutine.create(function()
