@@ -954,7 +954,7 @@ function library:CreateWindow(Text : string)
             Current.Position = UDim2.new(0.843145132, 0, 0.333333343, 0)
             Current.Size = UDim2.new(0.106451713, 0, 0.666666687, 0)
             Current.Font = Enum.Font.Gotham
-            Current.Text = "2"
+            Current.Text = ""
             Current.TextColor3 = Color3.fromRGB(236, 236, 236)
             Current.TextSize = 18.000
             Current.TextWrapped = true
@@ -966,7 +966,9 @@ function library:CreateWindow(Text : string)
             
             local from = From
             local to = To
-            local percentage = (From + (To - From))/To
+            local percentage = 0.5
+
+            Current.Text = From + ((To - From) * percentage)
             
             local circleColour = Color3.fromRGB(53, 53, 53)
             
@@ -2086,9 +2088,7 @@ function library:CreateWindow(Text : string)
 
             -- // Register the callback
             TextBox_1.FocusLost:Connect(function(EnterPressed)
-                if EnterPressed then
-                    Callback(TextBox_1.Text)
-                end
+                Callback(TextBox_1.Text)
             end)
         end
 
@@ -2144,11 +2144,9 @@ function library:CreateWindow(Text : string)
             end)
 
             -- // Register the callback
-            NumberBox_1.FocusLost:Connect(function(EnterPressed)
-                if EnterPressed then
-                    NumberBox_1.Text = filter(NumberBox_1.Text)
-                    Callback(tonumber(NumberBox_1.Text))
-                end
+            NumberBox_1.FocusLost:Connect(function()
+                NumberBox_1.Text = filter(NumberBox_1.Text)
+                Callback(tonumber(NumberBox_1.Text))
             end)
         end
 
