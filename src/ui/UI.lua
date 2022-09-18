@@ -2104,6 +2104,66 @@ function library:CreateWindow(Text : string)
             Frame.Visible = true
         end)
 
+        -- // NumberBox
+        function library:CreateNumberBox(Text: string, Callback)
+            -- // Create the textbox
+            local NumberBox = Instance.new("Frame")
+            NumberBox.Name = "Textbox"
+            NumberBox.Parent = Frame
+            NumberBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            NumberBox.BackgroundTransparency = 1.000
+            NumberBox.Size = UDim2.new(0, 496, 0, 42)
+
+            local NumberBox_1 = Instance.new("TextBox")
+            NumberBox_1.Parent = NumberBox
+            NumberBox_1.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            NumberBox_1.BackgroundTransparency = 0.800
+            NumberBox_1.BorderSizePixel = 0
+            NumberBox_1.Size = UDim2.new(1, 0, 1, 0)
+            NumberBox_1.Font = Enum.Font.Gotham
+            NumberBox_1.PlaceholderColor3 = Color3.fromRGB(178, 178, 178)
+            NumberBox_1.PlaceholderText = Text
+            NumberBox_1.Text = ""
+            NumberBox_1.TextColor3 = Color3.fromRGB(195, 195, 195)
+            NumberBox_1.TextSize = 14.000
+
+            -- // Script
+            local function filter(str: string)
+                for i = 1, #str do
+                    local c = str:sub(i,i)
+                    if not tonumber(c) then
+                        str = str:gsub(c, "")
+                    end
+                end
+
+                return str
+            end
+
+            NumberBox_1.InputChanged:Connect(function()
+                NumberBox_1.Text = filter(NumberBox_1.Text)
+            end)
+
+            -- // Register the callback
+            NumberBox_1.FocusLost:Connect(function(EnterPressed)
+                if EnterPressed then
+                    NumberBox_1.Text = filter(NumberBox_1.Text)
+                    Callback(tonumber(NumberBox_1.Text))
+                end
+            end)
+        end
+
+        -- // Bind the tab button to show
+        -- // the tab panel when clicked
+        Button.MouseButton1Down:Connect(function()
+            -- // Hide all tabs
+            for i, child in ipairs(Menu:GetChildren()) do
+                child.Visible = false
+            end
+
+            -- // Show the tab
+            Frame.Visible = true
+        end)
+
         --// Return the library
         return library
     end
