@@ -10,36 +10,28 @@
 local UI = loadstring(game:HttpGet("https://raw.githubusercontent.com/darraghd493/FestivalWare/master/src/ui/UI.lua"))()
 local Window = UI:CreateWindow("FestivalWare")
 local Player = Window:CreateTab("Player")
+local Server = Window:CreateTab("Server")
 local Settings = Window:CreateTab("Settings")
 
 local Workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Mouse = Players.LocalPlayer:GetMouse()
-
-function disable(signal, name)
-    local success = true
-
-    for _, connection in pairs(getconnections(signal)) do
-        local disable_success, disable_error = pcall(connection.Disconnect)
-
-        if not disable_success then
-            success = false
-            error("Failed to disable signal " .. signal.Name .. ": " .. disable_error)
-        end
-    end
-
-    return success
-end
-
-disable(Workspace.playerModels[Players.LocalPlayer.Name].positionUpdate)
-
 Player:CreateLabel("Cheats")
-Player:CreateCheckbox("Reach", function()
+Player:CreateCheckbox("Reach", function(toggled)
     for _, part in pairs(Workspace.playerModels:GetDescendants()) do
         if part.Name == Players.LocalPlayer.Name then
-            part.ball.spinner.LimitsEnabled = false
+            part.ball.spinner.LimitsEnabled = not toggled
+        end
+    end
+end)
+
+Server:CreateLabel("Abuse")
+local error_spam = Server:CreateCheckbox("Error Spam", function(toggled) -- Not local - used within callback function
+    if toggled then
+        while error_spam:GetState() do
+            ReplicatedStorage.GameAnalyticsRemoteConfigs:FireServer("error", "", "error")
+            wait()
         end
     end
 end)

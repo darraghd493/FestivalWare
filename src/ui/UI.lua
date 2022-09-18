@@ -289,7 +289,7 @@ function library:CreateWindow(Text : string)
 
     local UIListLayout_1 = Instance.new("UIListLayout")
     UIListLayout_1.Parent = Notifications
-    UIListLayout_1.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    UIListLayout_1.HorizontalAlignment = Enum.HorizontalAlignment.Left
     UIListLayout_1.SortOrder = Enum.SortOrder.LayoutOrder
     UIListLayout_1.VerticalAlignment = Enum.VerticalAlignment.Bottom
     UIListLayout_1.Padding = UDim.new(0, 5)
