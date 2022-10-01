@@ -27,7 +27,7 @@ local Mouse = LocalPlayer:GetMouse()
 local library = {}
 
 -- // Utility functions
--- // Returns current mousel location
+-- // Returns current mouse location
 function GetMouseLocation()
     return UserInputService:GetMouseLocation() - GUIService:GetGuiInset()
 end
@@ -138,7 +138,6 @@ function library:CreateWindow(Text : string)
     -- // and if so, protect the frame
     if syn then
         syn.protect_gui(FestivalWare)
-        FestivalWare.Name = random(16)
     end
 
     -- // Randomise the name of the GUI
@@ -2258,6 +2257,42 @@ function library:CreateWindow(Text : string)
         Notifications:Destroy()
         FestivalWare:Destroy()
     end
+
+    function library:Hide()
+        local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local bodyScaleTween = TweenService:Create(UIScale, tweenInfo, {
+            Scale = 0
+        })
+        bodyScaleTween:Play()
+        bodyScaleTween.Completed:Wait()
+
+        Body.Visible = false
+    end
+
+    function library:Show()
+        local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local bodyScaleTween = TweenService:Create(UIScale, tweenInfo, {
+            Scale = 1
+        })
+        bodyScaleTween:Play()
+        bodyScaleTween.Completed:Wait()
+
+        Body.Visible = true
+    end
+
+    function library:Toggle()
+        if Body.Visible then
+            library:Hide()
+        else
+            library:Show()
+        end
+    end
+    
+    UserInputService.InputBegan:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.RightControl then
+            library:Toggle()
+        end
+    end)
 
     -- // Make the window draggable
     draggable(Body, Menu)
