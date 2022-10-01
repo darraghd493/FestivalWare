@@ -1734,7 +1734,7 @@ function library:CreateWindow(Text : string)
             Menu.Position = UDim2.new(0, 0, 1.00000072, 0)
             Menu.Selectable = true
             Menu.Size = UDim2.new(0, 496, 0, 135)
-            Menu.ZIndex = 2 -- // Make sure it's on top of the other elements
+            Menu.ZIndex = 9e9 -- // Make sure it's on top of the other elements
 
             local A = Instance.new("Frame")
             A.Name = "A"
