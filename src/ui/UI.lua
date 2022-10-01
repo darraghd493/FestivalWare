@@ -475,7 +475,10 @@ function library:CreateWindow(Text : string)
             
             local function OnMouseButton1Down()
                 active = true
-                Callback()
+                
+                if Callback ~= nil then
+                    Callback()
+                end
             
                 local buttonAbsoluteSize = Button_1.AbsoluteSize
                 local buttonAbsolutePosition = Button_1.AbsolutePosition
@@ -567,7 +570,9 @@ function library:CreateWindow(Text : string)
 
             -- // Functions
             function element_library:Call()
-                Callback()
+                if Callback ~= nil then
+                    Callback()
+                end
             end
 
             function element_library:SetText(Text: string)
@@ -720,8 +725,10 @@ function library:CreateWindow(Text : string)
                 end
                 
                 UpdateCheckbox()
-                Callback(toggled)
-                
+                if Callback ~= nil then
+                    Callback(toggled)
+                end
+
                 local buttonAbsoluteSize = Toggle_1.AbsoluteSize
                 local buttonAbsolutePosition = Toggle_1.AbsolutePosition
 
@@ -817,13 +824,17 @@ function library:CreateWindow(Text : string)
             function element_library:Toggle()
                 toggled = not toggled
                 UpdateCheckbox()
-                Callback(toggled)
+                if Callback ~= nil then
+                    Callback(toggled)
+                end
             end
 
             function element_library:SetState(state)
                 toggled = state
                 UpdateCheckbox()
-                Callback(toggled)
+                if Callback ~= nil then
+                    Callback(toggled)
+                end
             end
 
             function element_library:GetState()
@@ -1098,7 +1109,9 @@ function library:CreateWindow(Text : string)
             end
             
             local function OnMouseLeave()
-                Callback(from + ((to - from) * percentage))
+                if Callback ~= nil then
+                    Callback(from + ((to - from) * percentage))
+                end
 
                 UpdateSlider()
                 hovering = false
@@ -1333,7 +1346,9 @@ function library:CreateWindow(Text : string)
                 local function OnMouseButton1Down()
                     active = true
                     CurrentOption = option
-                    Callback(option)
+                    if Callback ~= nil then
+                        Callback(option)
+                    end
 
                     for i, v in pairs(Menu:GetChildren()) do
                         v.Label.TextColor3 = Color3.fromRGB(236, 236, 236)
@@ -1854,7 +1869,10 @@ function library:CreateWindow(Text : string)
                     BackgroundColor3 = colour
                 })
                 colourTween:Play()
-                Callback(colour)
+
+                if Callback ~= nil then
+                    Callback(colour)
+                end
             end
 	
             local function CreateCircle()
@@ -2087,7 +2105,9 @@ function library:CreateWindow(Text : string)
 
             -- // Register the callback
             TextBox_1.FocusLost:Connect(function(EnterPressed)
-                Callback(TextBox_1.Text)
+                if Callback ~= nil then
+                    Callback(TextBox_1.Text)
+                end
             end)
         end
 
@@ -2145,7 +2165,9 @@ function library:CreateWindow(Text : string)
             -- // Register the callback
             NumberBox_1.FocusLost:Connect(function()
                 NumberBox_1.Text = filter(NumberBox_1.Text)
-                Callback(tonumber(NumberBox_1.Text))
+                if Callback ~= nil then
+                    Callback(tonumber(NumberBox_1.Text))
+                end
             end)
         end
 
