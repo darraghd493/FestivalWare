@@ -334,6 +334,7 @@ function library:CreateWindow(Text : string)
         Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         Frame.BackgroundTransparency = 1.000
         Frame.BorderSizePixel = 0
+        Frame.CanvasSize = UDim2.new(0, 0, 0, 0)
         Frame.Size = UDim2.new(0, 508, 0, 375)
         Frame.ScrollBarThickness = 0
         Frame.Visible = firstTab
@@ -378,6 +379,8 @@ function library:CreateWindow(Text : string)
             TextLabel.Text = Text
             TextLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
             TextLabel.TextSize = 32.000
+
+            Frame.CanvasSize = Frame.CanvasSize + UDim2.new(0, 0, 0, 42)
 
             -- // Functions
             function element_library:SetText(Text: string)
@@ -448,6 +451,8 @@ function library:CreateWindow(Text : string)
             Label.TextColor3 = Color3.fromRGB(236, 236, 236)
             Label.TextSize = 18.000
             Label.TextWrapped = true
+
+            Frame.CanvasSize = Frame.CanvasSize + UDim2.new(0, 0, 0, 42)
 
             -- // Run the script
             local active = false
@@ -664,6 +669,8 @@ function library:CreateWindow(Text : string)
             Label.TextColor3 = Color3.fromRGB(236, 236, 236)
             Label.TextSize = 18.000
             Label.TextWrapped = true
+
+            Frame.CanvasSize = Frame.CanvasSize + UDim2.new(0, 0, 0, 42)
 
             -- // Run the script
             local active = false
@@ -970,6 +977,8 @@ function library:CreateWindow(Text : string)
             Current.TextWrapped = true
             Current.TextXAlignment = Enum.TextXAlignment.Right
 
+            Frame.CanvasSize = Frame.CanvasSize + UDim2.new(0, 0, 0, 50)
+
             -- // Run the script
             local active = false
             local hovering = false
@@ -1255,7 +1264,9 @@ function library:CreateWindow(Text : string)
             Menu.CanvasSize = UDim2.new(0, 0, 0, 0)
             Menu.CanvasPosition = Vector2.new(0, 0)
             Menu.ScrollBarThickness = 0
-            
+
+            Frame.CanvasSize = Frame.CanvasSize + UDim2.new(0, 0, 0, 42)
+
             -- // Create the menu's UIListLayout
             local UIListLayout = Instance.new("UIListLayout")
             UIListLayout.Parent = Menu
@@ -1806,6 +1817,8 @@ function library:CreateWindow(Text : string)
             Fade.Image = "http://www.roblox.com/asset/?id=10890905921"
             Fade.ImageTransparency = 0.250
 
+            Frame.CanvasSize = Frame.CanvasSize + UDim2.new(0, 0, 0, 42)
+
             -- // Run the script
             local active = false
             local hovering = false
@@ -2145,6 +2158,8 @@ function library:CreateWindow(Text : string)
             NumberBox_1.Text = ""
             NumberBox_1.TextColor3 = Color3.fromRGB(195, 195, 195)
             NumberBox_1.TextSize = 14.000
+
+            Frame.CanvasSize = Frame.CanvasSize + UDim2.new(0, 0, 0, 42)
 
             -- // Script
             local function filter(str: string)
