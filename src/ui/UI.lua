@@ -2307,14 +2307,14 @@ function library:CreateWindow(Text : string)
     end
 
     function library:Show()
+        Body.Visible = true
+        
         local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
         local bodyScaleTween = TweenService:Create(UIScale, tweenInfo, {
             Scale = 1
         })
         bodyScaleTween:Play()
         bodyScaleTween.Completed:Wait()
-
-        Body.Visible = true
     end
 
     function library:Toggle()
