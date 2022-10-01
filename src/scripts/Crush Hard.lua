@@ -28,7 +28,7 @@ end)
 
 Server:CreateButton("Destroy All Cars", function()
     for i, v in pairs(Workspace:GetChildren()) do
-        if string.match(v.Name, "Car") then
+        if string.match(v.Name, "sCar") then
             ReplicatedStorage.DeleteCar:FireServer(v)
         end
     end
@@ -52,9 +52,9 @@ Server:CreateButton("Destroy Other Players", function()
 end)
 
 Server:CreateLabel("Lag")
-Server:CreateButton("Model Lag", function()
+Server:CreateButton("Mass Request", function()
     for i=1,100000 do
-        ReplicatedStorage.SpawnCar:FireServer("Car" .. math.random(1, 62))
+        ReplicatedStorage.SpawnCar:FireServer("BMW M3 GTR (Race)")
     end
     Window:CreateNotification("FestivalWare", "The server has been crashed.")
 end)
@@ -65,6 +65,7 @@ Server:CreateButton("Give CarTools", function()
     Hammer.Parent = Players.LocalPlayer.Backpack
     Hammer.Name = "Hammer"
     Hammer.BinType = "Script"
+    
 
     Hammer.Selected:Connect(function(input)
         input.Button1Down:Connect(function()
@@ -87,7 +88,7 @@ Server:CreateButton("Give CarTools", function()
 
             HumanoidRootPart.CFrame = Mouse.Hit + Vector3.new(0, 2, 0)
             wait(0.1)
-            ReplicatedStorage.SpawnCar:FireServer("Car" .. math.random(1, 62))
+            ReplicatedStorage.SpawnCar:FireServer("BMW M3 GTR (Race)")
             wait(0.1)
             HumanoidRootPart.CFrame = originalCF
         end)

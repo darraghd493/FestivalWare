@@ -15,13 +15,29 @@ local Settings = Window:CreateTab("Settings")
 local Workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StarterGui = game:GetService("StarterGui")
 
 local Mouse = Players.LocalPlayer:GetMouse()
+local Cars = {}
+
+for i, gui in ipairs(StarterGui:GetChildren()) do
+    if gui.Name == "ScreenGui" then
+        for v, frame in ipairs(gui:GetChildren()) do
+            if frame.Name == "Frame1" and frame:FindFirstChild("Frame", false) then
+                for x, car in ipairs(frame.Frame:GetChildren()) do
+                    if car:IsA("ImageButton") then
+                        table.insert(Cars, car.Name)
+                    end
+                end
+            end
+        end
+    end
+end
 
 Server:CreateLabel("Destroy")
 Server:CreateButton("Destroy Everything", function()
     for i, v in pairs(Workspace:GetChildren()) do
-        ReplicatedStorage.DeleteCar:FireServer(v)
+        ReplicatedStorage:FindFirstChild("Delete\208\161ar1"):FireServer(v)
     end
     Window:CreateNotification("FestivalWare", "Destroyed everything in the workspace.")
 end)
@@ -29,7 +45,7 @@ end)
 Server:CreateButton("Destroy All Cars", function()
     for i, v in pairs(Workspace:GetChildren()) do
         if string.match(v.Name, "Car") then
-            ReplicatedStorage.DeleteCar:FireServer(v)
+            ReplicatedStorage:FindFirstChild("Delete\208\161ar1"):FireServer(v)
         end
     end
     Window:CreateNotification("FestivalWare", "Destroyed all cars in the workspace.")
@@ -37,7 +53,7 @@ end)
 
 Server:CreateButton("Destroy All Players", function()
     for i, v in pairs(Players:GetChildren()) do
-        ReplicatedStorage.DeleteCar:FireServer(v.Character)
+        ReplicatedStorage:FindFirstChild("Delete\208\161ar1"):FireServer(v.Character)
     end
     Window:CreateNotification("FestivalWare", "All players have been destroyed!")
 end)
@@ -45,7 +61,8 @@ end)
 Server:CreateButton("Destroy Other Players", function()
     for i, v in pairs(Players:GetChildren()) do
         if v ~= Players.LocalPlayer then
-            ReplicatedStorage.DeleteCar:FireServer(v.Character)
+            ReplicatedStorage:FindFirstChild("Delete\208\161ar1")
+:FireServer(v.Character)
         end
     end
     Window:CreateNotification("FestivalWare", "Other players have been destroyed!")
@@ -54,7 +71,7 @@ end)
 Server:CreateLabel("Lag")
 Server:CreateButton("Model Lag", function()
     for i=1,100000 do
-        ReplicatedStorage.SpawnCar:FireServer("Car" .. math.random(1, 62))
+        ReplicatedStorage.SpawnCar:FireServer(Cars[math.random(1, #Cars)])
     end
     Window:CreateNotification("FestivalWare", "The server has been crashed.")
 end)
@@ -70,7 +87,8 @@ Server:CreateButton("Give CarTools", function()
         input.Button1Down:Connect(function()
             local part = Mouse.Target
             if part:IsA("BasePart") then
-                ReplicatedStorage.DeleteCar:FireServer(part)
+                ReplicatedStorage:FindFirstChild("Delete\208\161ar1")
+    :FireServer(part)
             end
         end)
     end)
@@ -87,7 +105,7 @@ Server:CreateButton("Give CarTools", function()
 
             HumanoidRootPart.CFrame = Mouse.Hit + Vector3.new(0, 2, 0)
             wait(0.1)
-            ReplicatedStorage.SpawnCar:FireServer("Car" .. math.random(1, 62))
+            ReplicatedStorage.SpawnCar:FireServer(Cars[math.random(1, #Cars)])
             wait(0.1)
             HumanoidRootPart.CFrame = originalCF
         end)

@@ -17,12 +17,15 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 Player:CreateLabel("Exploits")
 Player:CreateButton("Become Large", function()
-    ReplicatedStorage.ChangePlayerStat:FireServer("Mass", math.huge)
+    for i=1,10000 do
+        ReplicatedStorage.ChangePlayerStat:FireServer("Mass", math.huge)
+    end
 end)
 become_larger = Player:CreateCheckbox("Become Larger", function(toggled)
     if toggled then
         while become_larger:GetState() do
-            ReplicatedStorage.ChangePlayerStat:FireServer("Mass", 20)
+            ReplicatedStorage.ChangePlayerStat:FireServer("Mass", math.huge)
+            wait()
         end
     end
 end)

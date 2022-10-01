@@ -8,6 +8,66 @@
                 "Title": "Car Crash Test",
                 "Version": "0.0.0",
                 "Path": "Car Crash Test.lua"
+            },
+            "5209284442": {
+                "Title": "Vehicle Suspension Test",
+                "Version": "0.0.0",
+                "Path": "Vehicle Suspension Test.lua"
+            },
+            "6816975827": {
+                "Title": "Car Suspension Test",
+                "Version": "0.0.0",
+                "Path": "Car Suspension Test.lua"
+            },
+            "9043532917": {
+                "Title": "Ramp Jumping",
+                "Version": "0.0.0",
+                "Path": "Ramp Jumping.lua"
+            },
+            "10927225814": {
+                "Title": "Crush Hard",
+                "Version": "0.0.0",
+                "Path": "Crush Hard.lua"
+            },
+            "4950394908": {
+                "Title": "Ragdoll Simulator",
+                "Version": "0.0.0",
+                "Path": "Ragdoll Simulator.lua"
+            },
+            "171391948": {
+                "Title": "Vehicle Simulator",
+                "Version": "0.0.0",
+                "Path": "Vehicle Simulator.lua"
+            },
+            "1242235469": {
+                "Title": "Ball and Axe",
+                "Version": "0.0.0",
+                "Path": "Ball and Axe.lua"
+            },
+            "9602700094": {
+                "Title": "Meteor Simulator",
+                "Version": "0.0.0",
+                "Path": "Simulator/Meteor Simulator.lua"
+            },
+            "9281034297": {
+                "Title": "Goal Kick Simulator",
+                "Version": "0.0.0",
+                "Path": "Simulator/Goal Kick Simulator.lua"
+            },
+            "6290184304": {
+                "Title": "My Pet Shop Tycoon",
+                "Version": "0.0.0",
+                "Path": "Simulator/My Pet Shop Tycoon.lua"
+            },
+            "3686253681": {
+                "Title": "Planet Simulator",
+                "Version": "0.0.0",
+                "Path": "Simulator/Planet Simulator.lua"
+            },
+            "4738545896": {
+                "Title": "Shoot-Out",
+                "Version": "0.0.0",
+                "Path": "Shoot-Out.lua"
             }
         }
     }
