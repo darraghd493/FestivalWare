@@ -977,7 +977,7 @@ function library:CreateWindow(Text : string)
             Current.TextWrapped = true
             Current.TextXAlignment = Enum.TextXAlignment.Right
 
-            Frame.CanvasSize = Frame.CanvasSize + UDim2.new(0, 0, 0, 50)
+            Frame.CanvasSize = Frame.CanvasSize + UDim2.new(0, 0, 0, 42)
 
             -- // Run the script
             local active = false
@@ -2308,7 +2308,7 @@ function library:CreateWindow(Text : string)
 
     function library:Show()
         Body.Visible = true
-        
+
         local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
         local bodyScaleTween = TweenService:Create(UIScale, tweenInfo, {
             Scale = 1
