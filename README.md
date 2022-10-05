@@ -2,7 +2,7 @@
 FestivalWare is a bad Roblox script made for the hell of making it.
 
 ## How to use
-As of now, there is no way to easily use this. The README will be updated soon with a tutorial showing you how to.
+As of now, there is no way to easily use this. The [README](#) will be updated soon with a tutorial showing you how to.
 
 ## Support
 Currently, no games are supported. There is only a UI library still being worked.
