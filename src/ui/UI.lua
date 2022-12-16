@@ -482,7 +482,7 @@ function library:CreateWindow(Text : string)
                 active = true
                 
                 if Callback ~= nil then
-                    Callback()
+                    Callback(element_library)
                 end
             
                 local buttonAbsoluteSize = Button_1.AbsoluteSize
@@ -576,7 +576,7 @@ function library:CreateWindow(Text : string)
             -- // Functions
             function element_library:Call()
                 if Callback ~= nil then
-                    Callback()
+                    Callback(element_library)
                 end
             end
 
@@ -733,7 +733,7 @@ function library:CreateWindow(Text : string)
                 
                 UpdateCheckbox()
                 if Callback ~= nil then
-                    Callback(toggled)
+                    Callback(toggled, element_library)
                 end
 
                 local buttonAbsoluteSize = Toggle_1.AbsoluteSize
@@ -832,7 +832,7 @@ function library:CreateWindow(Text : string)
                 toggled = not toggled
                 UpdateCheckbox()
                 if Callback ~= nil then
-                    Callback(toggled)
+                    Callback(toggled, element_library)
                 end
             end
 
@@ -840,7 +840,7 @@ function library:CreateWindow(Text : string)
                 toggled = state
                 UpdateCheckbox()
                 if Callback ~= nil then
-                    Callback(toggled)
+                    Callback(toggled, element_library)
                 end
             end
 
@@ -1119,7 +1119,7 @@ function library:CreateWindow(Text : string)
             
             local function OnMouseLeave()
                 if Callback ~= nil then
-                    Callback(from + ((to - from) * percentage))
+                    Callback(from + ((to - from) * percentage), element_library)
                 end
 
                 UpdateSlider()
@@ -1358,7 +1358,7 @@ function library:CreateWindow(Text : string)
                     active = true
                     CurrentOption = option
                     if Callback ~= nil then
-                        Callback(option)
+                        Callback(option, element_library)
                     end
 
                     for i, v in pairs(Menu:GetChildren()) do
@@ -1884,7 +1884,7 @@ function library:CreateWindow(Text : string)
                 colourTween:Play()
 
                 if Callback ~= nil then
-                    Callback(colour)
+                    Callback(colour, element_library)
                 end
             end
 	
@@ -2119,7 +2119,7 @@ function library:CreateWindow(Text : string)
             -- // Register the callback
             TextBox_1.FocusLost:Connect(function(EnterPressed)
                 if Callback ~= nil then
-                    Callback(TextBox_1.Text)
+                    Callback(TextBox_1.Text, element_library)
                 end
             end)
         end
@@ -2181,7 +2181,7 @@ function library:CreateWindow(Text : string)
             NumberBox_1.FocusLost:Connect(function()
                 NumberBox_1.Text = filter(NumberBox_1.Text)
                 if Callback ~= nil then
-                    Callback(tonumber(NumberBox_1.Text))
+                    Callback(tonumber(NumberBox_1.Text), element_library)
                 end
             end)
         end
@@ -2268,7 +2268,7 @@ function library:CreateWindow(Text : string)
             Notification:Destroy()      
 
             if Callback ~= nil then
-                Callback()
+                Callback(element_library)
             end
         end))
     end
