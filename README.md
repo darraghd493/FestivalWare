@@ -1,5 +1,5 @@
 # FestivalWare
-FestivalWare is a shitty Roblox script made for the hell of making it.
+FestivalWare is a bad Roblox script made for the hell of making it.
 
 ## How to use
 As of now, there is no way to easily use this. The README will be updated soon with a tutorial showing you how to.
